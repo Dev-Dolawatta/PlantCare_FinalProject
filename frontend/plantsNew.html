@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Plants - PlantCare</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #43a047;
+      --primary-light: #66bb6a;
+      --primary-dark: #388e3c;
+      --accent: #ffa000;
+      --text-dark: #1e1e1e;
+      --text-light: #757575;
+      --background: #f8f9fa;
+      --card-bg: #ffffff;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background);
+      color: var(--text-dark);
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
+      color: white;
+      height: 100vh;
+      position: fixed;
+      padding: 1.5rem 1rem;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      padding: 0 0.5rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-brand i {
+      font-size: 28px;
+      margin-right: 10px;
+    }
+
+    .sidebar-brand h4 {
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .nav-link {
+      color: rgba(255, 255, 255, 0.8) !important;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin: 0.25rem 0;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: white !important;
+      background-color: rgba(255, 255, 255, 0.1);
+      transform: translateX(5px);
+    }
+
+    .nav-link i {
+      width: 24px;
+      margin-right: 12px;
+      text-align: center;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 260px;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .page-header {
+      margin-bottom: 2rem;
+    }
+
+    .page-header h2 {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Cards */
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .plant-card img {
+      height: 200px;
+      object-fit: cover;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .plant-card .card-body {
+      padding: 1.25rem;
+    }
+
+    .plant-card .card-title {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badge {
+      font-weight: 500;
+      padding: 0.35em 0.65em;
+    }
+
+    .btn-sm {
+      border-radius: 8px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .btn-success {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .btn-success:hover {
+      background-color: var(--primary-dark);
+      border-color: var(--primary-dark);
+    }
+
+    .btn-outline-success {
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .btn-outline-success:hover {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Filter Card */
+    .filter-card {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+    }
+
+    .filter-card .form-control,
+    .filter-card .form-select {
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      padding: 0.5rem 0.75rem;
+    }
+
+    /* Modal */
+    .modal-content {
+      border-radius: 12px;
+      border: none;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header {
+      border-bottom: 1px solid #e9ecef;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-footer {
+      border-top: 1px solid #e9ecef;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .form-control, .form-select {
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.25rem rgba(67, 160, 71, 0.25);
+    }
+
+    .form-check-input:checked {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-light);
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      color: #ddd;
+    }
+
+    .empty-state p {
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <i class="fas fa-leaf"></i>
+    <h4>PlantCare</h4>
+  </div>
+  <ul class="nav flex-column">
+    <li class="nav-item">
+      <a href="new.html" class="nav-link">
+        <i class="fas fa-home"></i>Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="plantsNew.html" class="nav-link active">
+        <i class="fas fa-seedling"></i>My Plants
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="taskNew.html" class="nav-link">
+        <i class="fas fa-tasks"></i>Tasks
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="archive.html" class="nav-link">
+        <i class="fas fa-archive"></i>Archived
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="profileNew.html" class="nav-link">
+        <i class="fas fa-user"></i>Profile
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<div class="main-content">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="page-header">
+      <h2>My Plants</h2>
+      <p class="text-muted">Manage your plant collection</p>
+    </div>
+    <button id="addPlantBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPlant">
+      <i class="fas fa-plus me-2"></i>Add Plant
+    </button>
+  </div>
+
+  <div class="card shadow-sm filter-card">
+    <form class="row g-3">
+      <div class="col-md-3">
+        <input type="text" class="form-control" placeholder="Search by name" id="filterName">
+      </div>
+      <div class="col-md-3">
+        <select class="form-select" id="filterType">
+          <option value="">All Types</option>
+          <option value="Indoor">Indoor</option>
+          <option value="Outdoor">Outdoor</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select class="form-select" id="filterStatus">
+          <option value="">All Status</option>
+          <option value="Healthy">Healthy</option>
+          <option value="Needs Attention">Needs Attention</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select class="form-select" id="filterPriority">
+          <option value="">All Priorities</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+      </div>
+    </form>
+  </div>
+
+  <div class="row" id="plantGrid">
+    <!--        &lt;!&ndash; Example plant card (commented out in original) &ndash;&gt;-->
+    <!--        <div class="col-md-4 mb-4">-->
+    <!--            <div class="card plant-card">-->
+    <!--                <img src="https://placehold.co/400x300/e8f5e9/43a047?text=Aloe+Vera" class="card-img-top" alt="Plant Image">-->
+    <!--                <div class="card-body">-->
+    <!--                    <h5 class="card-title d-flex justify-content-between align-items-center">-->
+    <!--                        Aloe Vera <span class="text-warning"><i class="fas fa-star"></i></span>-->
+    <!--                    </h5>-->
+    <!--                    <p class="card-text">-->
+    <!--                        Type: Indoor <br>-->
+    <!--                        Status: <span class="badge bg-success">Healthy</span> <br>-->
+    <!--                        Priority: <span class="badge bg-danger">High</span>-->
+    <!--                    </p>-->
+    <!--                    <div class="d-flex justify-content-between">-->
+    <!--                        <a href="plant-details.html" class="btn btn-sm btn-outline-success">View</a>-->
+    <!--                        <button class="btn btn-sm btn-outline-primary">Edit</button>-->
+    <!--                        <button class="btn btn-sm btn-outline-danger">Archive</button>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+
+    <!--        &lt;!&ndash; Second example plant &ndash;&gt;-->
+    <!--        <div class="col-md-4 mb-4">-->
+    <!--            <div class="card plant-card">-->
+    <!--                <img src="https://placehold.co/400x300/e8f5e9/43a047?text=Snake+Plant" class="card-img-top" alt="Plant Image">-->
+    <!--                <div class="card-body">-->
+    <!--                    <h5 class="card-title d-flex justify-content-between align-items-center">-->
+    <!--                        Snake Plant <span class="text-muted"><i class="far fa-star"></i></span>-->
+    <!--                    </h5>-->
+    <!--                    <p class="card-text">-->
+    <!--                        Type: Indoor <br>-->
+    <!--                        Status: <span class="badge bg-warning text-dark">Needs Attention</span> <br>-->
+    <!--                        Priority: <span class="badge bg-success">Low</span>-->
+    <!--                    </p>-->
+    <!--                    <div class="d-flex justify-content-between">-->
+    <!--                        <a href="plant-details.html" class="btn btn-sm btn-outline-success">View</a>-->
+    <!--                        <button class="btn btn-sm btn-outline-primary">Edit</button>-->
+    <!--                        <button class="btn btn-sm btn-outline-danger">Archive</button>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+
+    <!--        &lt;!&ndash; Third example plant &ndash;&gt;-->
+    <!--        <div class="col-md-4 mb-4">-->
+    <!--            <div class="card plant-card">-->
+    <!--                <img src="https://placehold.co/400x300/e8f5e9/43a047?text=Rose+Bush" class="card-img-top" alt="Plant Image">-->
+    <!--                <div class="card-body">-->
+    <!--                    <h5 class="card-title d-flex justify-content-between align-items-center">-->
+    <!--                        Rose Bush <span class="text-warning"><i class="fas fa-star"></i></span>-->
+    <!--                    </h5>-->
+    <!--                    <p class="card-text">-->
+    <!--                        Type: Outdoor <br>-->
+    <!--                        Status: <span class="badge bg-success">Healthy</span> <br>-->
+    <!--                        Priority: <span class="badge bg-warning text-dark">Medium</span>-->
+    <!--                    </p>-->
+    <!--                    <div class="d-flex justify-content-between">-->
+    <!--                        <a href="plant-details.html" class="btn btn-sm btn-outline-success">View</a>-->
+    <!--                        <button class="btn btn-sm btn-outline-primary">Edit</button>-->
+    <!--                        <button class="btn btn-sm btn-outline-danger">Archive</button>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+  </div>
+</div>
+
+<div class="modal fade" id="addPlant" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add New Plant</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="addPlantForm">
+          <div class="mb-3">
+            <label class="form-label">Plant Name</label>
+            <input type="text" class="form-control" id="plantName" placeholder="Enter plant name" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Plant Image</label>
+            <input type="file" class="form-control" id="plantImage" accept="image/*" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Environment</label>
+            <select class="form-select" id="plantEnvironment" required>
+              <option value="Cold">Cold</option>
+              <option value="Warm">Warm</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Age (in days)</label>
+            <input type="number" class="form-control" id="plantAge" placeholder="Enter age in days" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Type</label>
+            <select class="form-select" id="plantType" required>
+              <option value="Indoor">Indoor</option>
+              <option value="Outdoor">Outdoor</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Health Status</label>
+            <select id="plantHealth" class="form-select">
+              <option value="HEALTHY">Healthy</option>
+              <option value="NEEDS_ATTENTION">Needs Attention</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Priority</label>
+            <select class="form-select" id="plantPriority" required>
+              <option value="HIGH">High</option>
+              <option value="MEDIUM">Medium</option>
+              <option value="LOW">Low</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="isFavourite">
+              <label class="form-check-label" for="isFavourite">Favourite</label>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="isArchived">
+              <label class="form-check-label" for="isArchived">Archived</label>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button id="savePlantBtn" type="submit" form="addPlantForm" class="btn btn-success">Save Plant</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
